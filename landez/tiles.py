@@ -429,7 +429,10 @@ class ImageExporter(TilesManager):
         for i, row in enumerate(grid):
             for j, (x, y) in enumerate(row):
                 offset = (j * self.tile_size, i * self.tile_size)
-                img = self._tile_image(self.tile((zoomlevel, x, y)))
+                try:
+                    img = self._tile_image(self.tile((zoomlevel, x, y)))
+                except ExtractionError:
+                    img=Image.new("RGBA",(self.tile_size,self.tile_size),(0,0,0,0))
                 result.paste(img, offset)
         logger.info(_("Save resulting image to '%s'") % imagepath)
         result.save(imagepath)
